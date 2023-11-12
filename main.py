@@ -1,16 +1,18 @@
-# This is a sample Python script.
+from di.container import Container
+from modules.oanda.model.dtos.candle_stick_dto import CandleStickDTO
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
+    container = Container()
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    candles = container.oanda_service().get_candles_dict_by_pair('EUR_USD')
+
+    candles = CandleStickDTO.to_elite_candles(candles)
+
+    for candle in candles:
+        print(candle.mid_open)
+        print(candle.mid_low)
+        print(candle.mid_high)
+        print(candle.mid_close)
+        print(candle.complete)
+
+

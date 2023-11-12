@@ -1,0 +1,5 @@
+config/*
+
+alembic/*
+
+elite_venv
