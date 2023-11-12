@@ -9,5 +9,7 @@ class EnvConfig:
         self.OANDA_CANDLE_COUNT = config('OANDA_CANDLE_COUNT')
 
         # REGION DB
+        self.DB_NAME = config('DB_NAME')
         self.DB_URL = config('DB_URL')
+        self.DB_PASSWORD = config('DB_PASSWORD')
         #
