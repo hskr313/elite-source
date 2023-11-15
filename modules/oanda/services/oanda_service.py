@@ -1,4 +1,6 @@
 import os
+
+from dateutil import parser
 from dotenv import load_dotenv
 
 load_dotenv('config/.env')
@@ -71,7 +73,27 @@ class OandaService(AbstractExchangeService):
             return None
 
     def get_candles_df_by_pair(self, pair_name, **kwargs):
-        candles = self.get_candles_dict_by_pair(pair_name, **kwargs)
+        data = self.get_candles_dict_by_pair(pair_name, **kwargs)
 
-        if len(candles) == 0 or not candles:
+        if data is None:
+            return None
+        if len(data) == 0:
             return pd.DataFrame()
+
+        prices = ['mid', 'bid', 'ask']
+        ohlc = ['o', 'h', 'l', 'c']
+
+        final_data = []
+        for candle in data:
+            if not candle['complete']:
+                continue
+            new_dict = {}
+            new_dict['time'] = parser.parse(candle['time'])
+            new_dict['volume'] = candle['volume']
+            for p in prices:
+                if p in candle:
+                    for o in ohlc:
+                        new_dict[f"{p}_{o}"] = float(candle[p][o])
+            final_data.append(new_dict)
+        df = pd.DataFrame.from_dict(final_data)
+        return df
